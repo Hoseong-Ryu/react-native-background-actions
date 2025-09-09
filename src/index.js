@@ -10,6 +10,7 @@ import EventEmitter from 'eventemitter3';
  *            color?: string
  *            linkingURI?: string,
  *            progressBar?: {max: number, value: number, indeterminate?: boolean}
+ *            checkLocationPermissions?: boolean
  *            }} BackgroundTaskOptions
  * @extends EventEmitter<'expiration',any>
  */

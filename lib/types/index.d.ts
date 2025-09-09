@@ -26,6 +26,7 @@ declare const backgroundServer: BackgroundServer;
  *            color?: string
  *            linkingURI?: string,
  *            progressBar?: {max: number, value: number, indeterminate?: boolean}
+ *            checkLocationPermissions?: boolean
  *            }} BackgroundTaskOptions
  * @extends EventEmitter<'expiration',any>
  */
