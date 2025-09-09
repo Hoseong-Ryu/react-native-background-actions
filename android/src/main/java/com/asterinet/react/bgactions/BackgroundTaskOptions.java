@@ -68,6 +68,16 @@ public final class BackgroundTaskOptions {
         } catch (Exception e) {
             extras.putInt("color", Color.parseColor("#ffffff"));
         }
+        
+        // Handle checkLocationPermissions - Arguments.toBundle may not include boolean values properly
+        try {
+            if (options.hasKey("checkLocationPermissions")) {
+                boolean checkLocationPermissions = options.getBoolean("checkLocationPermissions");
+                extras.putBoolean("checkLocationPermissions", checkLocationPermissions);
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("checkLocationPermissions not found");
+        }
     }
 
     public Bundle getExtras() {
@@ -100,5 +110,9 @@ public final class BackgroundTaskOptions {
     @Nullable
     public Bundle getProgressBar() {
         return extras.getBundle("progressBar");
+    }
+
+    public boolean shouldCheckLocationPermissions() {
+        return extras.getBoolean("checkLocationPermissions", false);
     }
 }

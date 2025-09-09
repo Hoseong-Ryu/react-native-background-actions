@@ -7,13 +7,17 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.facebook.react.HeadlessJsTaskService;
 import com.facebook.react.bridge.Arguments;
@@ -90,6 +94,15 @@ final public class RNBackgroundActionsTask extends HeadlessJsTaskService {
         // Create the notification
         final Notification notification = buildNotification(this, bgOptions);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && bgOptions.shouldCheckLocationPermissions()) {
+            // Android 10+ (API 29+): Check required permissions for location foreground service
+            // This prevents SecurityException when permissions are revoked while service is running
+            if (!hasLocationPermissions()) {
+                stopSelf();
+                return START_NOT_STICKY;
+            }
+        }
+
         startForeground(SERVICE_NOTIFICATION_ID, notification);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -102,5 +115,20 @@ final public class RNBackgroundActionsTask extends HeadlessJsTaskService {
             final NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    /**
+     * Check if location permissions are granted
+     */
+    private boolean hasLocationPermissions() {
+        // Check location permissions
+        boolean hasFineLocation = ContextCompat.checkSelfPermission(this, 
+            android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean hasCoarseLocation = ContextCompat.checkSelfPermission(this, 
+            android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean hasBackgroundLocation = ContextCompat.checkSelfPermission(this, 
+            android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        return hasFineLocation && hasCoarseLocation && hasBackgroundLocation;
     }
 }

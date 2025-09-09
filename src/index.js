@@ -118,6 +118,7 @@ class BackgroundServer extends EventEmitter {
             color: options.color || '#ffffff',
             linkingURI: options.linkingURI,
             progressBar: options.progressBar,
+            checkLocationPermissions: options.checkLocationPermissions,
         };
     }
 
