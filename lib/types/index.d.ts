@@ -15,7 +15,6 @@ export type BackgroundTaskOptions = {
         value: number;
         indeterminate?: boolean | undefined;
     } | undefined;
-    checkLocationPermissions?: boolean | undefined;
 };
 declare const backgroundServer: BackgroundServer;
 /**
@@ -26,7 +25,6 @@ declare const backgroundServer: BackgroundServer;
  *            color?: string
  *            linkingURI?: string,
  *            progressBar?: {max: number, value: number, indeterminate?: boolean}
- *            checkLocationPermissions?: boolean
  *            }} BackgroundTaskOptions
  * @extends EventEmitter<'expiration',any>
  */
@@ -104,7 +102,6 @@ declare class BackgroundServer extends EventEmitter<"expiration", any> {
             value: number;
             indeterminate?: boolean | undefined;
         } | undefined;
-        checkLocationPermissions?: boolean | undefined;
     } & {
         parameters?: T | undefined;
     }): Promise<void>;
